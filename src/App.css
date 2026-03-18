@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 1.6rem;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.form input {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  color: #333;
+}
+
+.form input:focus {
+  border-color: #4f46e5;
+}
+
+.form-buttons {
+  grid-column: span 2;
+  display: flex;
+  gap: 10px;
+}
+
+.form-buttons button {
+  flex: 1;
+  padding: 10px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.form-buttons button:hover {
+  background: #4338ca;
+}
+
+button.bekor {
+  background: #6b7280;
+}
+
+button.bekor:hover {
+  background: #4b5563;
+}
+
+.qidiruv {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  outline: none;
+  color: #333;
+}
+
+.qidiruv:focus {
+  border-color: #4f46e5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+thead tr {
+  background: #4f46e5;
+  color: #fff;
+}
+
+th,
+td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+tbody tr:hover {
+  background: #f5f5ff;
+}
+
+.amallar {
+  display: flex;
+  gap: 8px;
+}
+
+.tahrirlash {
+  padding: 5px 12px;
+  background: #f59e0b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.tahrirlash:hover {
+  background: #d97706;
+}
+
+.tahrir-qator {
+  background: #fffbeb;
+}
+
+.ochirish {
+  padding: 5px 16px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.ochirish:hover {
+  background: #b91c1c;
+  box-shadow: 0 4px 10px rgba(185, 28, 28, 0.5);
+}
+
+.bosh {
+  text-align: center;
+  color: #999;
+  margin-top: 20px;
+}
