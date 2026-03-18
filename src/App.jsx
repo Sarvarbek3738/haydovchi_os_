@@ -39,21 +39,23 @@ function App() {
     e.preventDefault()
     if (!form.ism || !form.familiya || !form.avtoRaqam || !form.guvohnoma) return
 
+    const formData = { ...form }
+    setForm(EMPTY_FORM)
+    setTahrirId(null)
+
     if (tahrirId) {
       await updateDoc(doc(db, 'haydovchilar', tahrirId), {
-        ism: form.ism,
-        familiya: form.familiya,
-        avtoRaqam: form.avtoRaqam,
-        guvohnoma: form.guvohnoma
+        ism: formData.ism,
+        familiya: formData.familiya,
+        avtoRaqam: formData.avtoRaqam,
+        guvohnoma: formData.guvohnoma
       })
-      setTahrirId(null)
     } else {
       await addDoc(collection(db, 'haydovchilar'), {
-        ...form,
+        ...formData,
         createdAt: serverTimestamp()
       })
     }
-    setForm(EMPTY_FORM)
   }
 
   const handleTahrirlash = (item) => {
