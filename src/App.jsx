@@ -34,7 +34,7 @@ function Login({ onLogin }) {
             <label>Parol</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder="••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
