@@ -7,7 +7,7 @@ import {
 import './App.css'
 
 const CORRECT_PASSWORD = import.meta.env.VITE_APP_PASSWORD
-const EMPTY_FORM = { ism: '', familiya: '', avtoRaqam: '', guvohnoma: '' }
+const EMPTY_FORM = { ism: '', familiya: '', jshir: '', avtoRaqam: '', texPasport: '' }
 
 function Login({ onLogin }) {
   const [password, setPassword] = useState('')
@@ -73,7 +73,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!form.ism || !form.familiya || !form.avtoRaqam || !form.guvohnoma) return
+    if (!form.ism || !form.familiya || !form.jshir || !form.avtoRaqam || !form.texPasport) return
     const formData = { ...form }
     setForm(EMPTY_FORM)
     setTahrirId(null)
@@ -85,7 +85,7 @@ function App() {
   }
 
   const handleTahrirlash = (item) => {
-    setForm({ ism: item.ism, familiya: item.familiya, avtoRaqam: item.avtoRaqam, guvohnoma: item.guvohnoma })
+    setForm({ ism: item.ism, familiya: item.familiya, jshir: item.jshir, avtoRaqam: item.avtoRaqam, texPasport: item.texPasport })
     setTahrirId(item.id)
   }
 
@@ -102,7 +102,7 @@ function App() {
   }
 
   const filteredRoyxat = royxat.filter(item =>
-    `${item.ism} ${item.familiya} ${item.avtoRaqam} ${item.guvohnoma}`
+    `${item.ism} ${item.familiya} ${item.jshir} ${item.avtoRaqam} ${item.texPasport}`
       .toLowerCase().includes(qidiruv.toLowerCase())
   )
 
@@ -114,10 +114,11 @@ function App() {
       </div>
 
       <form className="form" onSubmit={handleSubmit}>
-        <input name="ism" placeholder="Ism" value={form.ism} onChange={handleChange} />
-        <input name="familiya" placeholder="Familiya" value={form.familiya} onChange={handleChange} />
-        <input name="avtoRaqam" placeholder="Avto raqam" value={form.avtoRaqam} onChange={handleChange} />
-        <input name="guvohnoma" placeholder="Haydovchi guvohnomasi" value={form.guvohnoma} onChange={handleChange} />
+        <input name="ism" placeholder="Haydovchi ismi" value={form.ism} onChange={handleChange} />
+        <input name="familiya" placeholder="Haydovchi familiyasi" value={form.familiya} onChange={handleChange} />
+        <input name="jshir" placeholder="Haydovchi JSHIR" value={form.jshir} onChange={handleChange} maxLength={14} />
+        <input name="avtoRaqam" placeholder="Avto raqami" value={form.avtoRaqam} onChange={handleChange} />
+        <input name="texPasport" placeholder="Tex pasport raqami" value={form.texPasport} onChange={handleChange} />
         <div className="form-buttons">
           <button type="submit">{tahrirId ? 'Saqlash' : 'Qoshish'}</button>
           {tahrirId && <button type="button" className="bekor" onClick={handleBekor}>Bekor qilish</button>}
@@ -134,17 +135,18 @@ function App() {
         <table>
           <thead>
             <tr>
-              <th>#</th><th>Ism</th><th>Familiya</th><th>Avto raqam</th><th>Guvohnoma</th><th>Amal</th>
+              <th>#</th><th>Ism</th><th>Familiya</th><th>JSHIR</th><th>Avto raqam</th><th>Tex pasport</th><th>Amal</th>
             </tr>
           </thead>
           <tbody>
             {filteredRoyxat.map((item, index) => (
               <tr key={item.id} className={tahrirId === item.id ? 'tahrir-qator' : ''}>
-                <td>{index + 1}</td>
-                <td>{item.ism}</td>
-                <td>{item.familiya}</td>
-                <td>{item.avtoRaqam}</td>
-                <td>{item.guvohnoma}</td>
+                <td data-label="#">{index + 1}</td>
+                <td data-label="Ism">{item.ism}</td>
+                <td data-label="Familiya">{item.familiya}</td>
+                <td data-label="JSHIR">{item.jshir}</td>
+                <td data-label="Avto raqam">{item.avtoRaqam}</td>
+                <td data-label="Tex pasport">{item.texPasport}</td>
                 <td className="amallar">
                   <button className="tahrirlash" onClick={() => handleTahrirlash(item)}>Tahrirlash</button>
                   <button className="ochirish" onClick={() => handleOchirish(item.id)}>Ochirish</button>
