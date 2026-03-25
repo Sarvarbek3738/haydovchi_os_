@@ -359,8 +359,27 @@ tbody tr:hover {
   }
 
   .login-box {
-    padding: 36px 24px;
+    padding: 28px 20px;
     margin: 16px;
     border-radius: 16px;
+    gap: 14px;
+  }
+
+  .login-box h2 {
+    font-size: 1.3rem;
+  }
+
+  .login-box .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .login-field input {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .login-btn {
+    padding: 10px;
+    font-size: 0.9rem;
   }
 }
