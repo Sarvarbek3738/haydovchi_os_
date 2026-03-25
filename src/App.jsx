@@ -1,21 +1,56 @@
 import { useState, useEffect } from 'react'
 import { db } from './firebase'
 import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  serverTimestamp,
-  query,
-  orderBy
+  collection, addDoc, updateDoc, deleteDoc,
+  doc, onSnapshot, serverTimestamp, query, orderBy
 } from 'firebase/firestore'
 import './App.css'
 
+const CORRECT_PASSWORD = import.meta.env.VITE_APP_PASSWORD
 const EMPTY_FORM = { ism: '', familiya: '', avtoRaqam: '', guvohnoma: '' }
 
+function Login({ onLogin }) {
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (password === CORRECT_PASSWORD) {
+      sessionStorage.setItem('auth', 'true')
+      onLogin()
+    } else {
+      setError('Parol noto\'g\'ri')
+      setPassword('')
+    }
+  }
+
+  return (
+    <div className="login-wrapper">
+      <div className="login-box">
+        <h2>Haydovchilar</h2>
+        <p className="subtitle">Tizimga kirish uchun parolni kiriting</p>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="login-field">
+            <label>Parol</label>
+            <input
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+              required
+            />
+          </div>
+          {error && <p className="xato">{error}</p>}
+          <button type="submit" className="login-btn">Kirish</button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 function App() {
+  const [loggedIn, setLoggedIn] = useState(() => sessionStorage.getItem('auth') === 'true')
   const [form, setForm] = useState(EMPTY_FORM)
   const [royxat, setRoyxat] = useState([])
   const [qidiruv, setQidiruv] = useState('')
@@ -23,38 +58,29 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!loggedIn) return
     const q = query(collection(db, 'haydovchilar'), orderBy('createdAt', 'asc'))
     const unsub = onSnapshot(q, (snapshot) => {
       setRoyxat(snapshot.docs.map(d => ({ id: d.id, ...d.data() })))
       setLoading(false)
     })
     return () => unsub()
-  }, [])
+  }, [loggedIn])
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+  if (!loggedIn) return <Login onLogin={() => setLoggedIn(true)} />
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form.ism || !form.familiya || !form.avtoRaqam || !form.guvohnoma) return
-
     const formData = { ...form }
     setForm(EMPTY_FORM)
     setTahrirId(null)
-
     if (tahrirId) {
-      await updateDoc(doc(db, 'haydovchilar', tahrirId), {
-        ism: formData.ism,
-        familiya: formData.familiya,
-        avtoRaqam: formData.avtoRaqam,
-        guvohnoma: formData.guvohnoma
-      })
+      await updateDoc(doc(db, 'haydovchilar', tahrirId), formData)
     } else {
-      await addDoc(collection(db, 'haydovchilar'), {
-        ...formData,
-        createdAt: serverTimestamp()
-      })
+      await addDoc(collection(db, 'haydovchilar'), { ...formData, createdAt: serverTimestamp() })
     }
   }
 
@@ -63,25 +89,29 @@ function App() {
     setTahrirId(item.id)
   }
 
-  const handleBekor = () => {
-    setForm(EMPTY_FORM)
-    setTahrirId(null)
-  }
+  const handleBekor = () => { setForm(EMPTY_FORM); setTahrirId(null) }
 
   const handleOchirish = async (id) => {
     await deleteDoc(doc(db, 'haydovchilar', id))
     if (tahrirId === id) handleBekor()
   }
 
+  const handleChiqish = () => {
+    sessionStorage.removeItem('auth')
+    setLoggedIn(false)
+  }
+
   const filteredRoyxat = royxat.filter(item =>
     `${item.ism} ${item.familiya} ${item.avtoRaqam} ${item.guvohnoma}`
-      .toLowerCase()
-      .includes(qidiruv.toLowerCase())
+      .toLowerCase().includes(qidiruv.toLowerCase())
   )
 
   return (
     <div className="container">
-      <h1>Haydovchilar Royxati</h1>
+      <div className="header-row">
+        <h1>Haydovchilar Royxati</h1>
+        <button className="chiqish" onClick={handleChiqish}>Chiqish</button>
+      </div>
 
       <form className="form" onSubmit={handleSubmit}>
         <input name="ism" placeholder="Ism" value={form.ism} onChange={handleChange} />
@@ -94,12 +124,7 @@ function App() {
         </div>
       </form>
 
-      <input
-        className="qidiruv"
-        placeholder="Qidiruv..."
-        value={qidiruv}
-        onChange={(e) => setQidiruv(e.target.value)}
-      />
+      <input className="qidiruv" placeholder="Qidiruv..." value={qidiruv} onChange={(e) => setQidiruv(e.target.value)} />
 
       {loading ? (
         <p className="bosh">Yuklanmoqda...</p>
@@ -109,12 +134,7 @@ function App() {
         <table>
           <thead>
             <tr>
-              <th>#</th>
-              <th>Ism</th>
-              <th>Familiya</th>
-              <th>Avto raqam</th>
-              <th>Guvohnoma</th>
-              <th>Amal</th>
+              <th>#</th><th>Ism</th><th>Familiya</th><th>Avto raqam</th><th>Guvohnoma</th><th>Amal</th>
             </tr>
           </thead>
           <tbody>
